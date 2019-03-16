@@ -1,0 +1,114 @@
+		.hand
+		{
+    		position: absolute;
+    		transform-origin: bottom;
+		}
+		#hr 
+		{
+			width:3px;
+			height:40px;
+			left:51%;
+			top:23%;
+			background-color:#cccddd;
+			border-top-left-radius: 1px;
+			border-top-right-radius:1px;
+		}
+		#min 
+		{
+			width:2px;
+			height:55px;
+			left:51%;
+			top:11%;
+			background-color:#dddeee;
+			border-top-left-radius: 1px;
+			border-top-right-radius:1px;
+		}
+		#sec 
+		{
+			width:1px;
+			height:60px;
+			left:50%;
+			top:8%;
+			background-color:#eeefff;
+			border-top-left-radius: 1px;
+			border-top-right-radius:1px;
+		}
+		#time
+		{
+			color:white;
+			position: absolute;
+			top:86px;
+			left:50px;
+			font-size: 9pt;
+		}
+		.nums 
+		{
+			height: 60px;	
+    		position: absolute;
+    		left: 50%;
+    		top: 6%;
+		}
+		.clock 
+		{
+			width:135px;
+			height:135px;
+			border:4px double #ccc;
+			border-radius:135px;
+			background-color: #505050;
+			position: relative;
+			margin:0 auto;
+		}
+		.text 
+		{
+			font-size:11pt;
+			position: absolute;
+    		left: -5px;
+    		color:white;
+		}
+		.dot 
+		{
+			width:5px;
+			height:5px;
+			border-radius: 10px;
+			background-color:white;
+			position: absolute;
+    		left: 50%;
+    		top: 50%;
+		}
+		.title 
+		{
+			text-shadow:10px 3px 3px #ccc;
+			font-size:14pt;
+			font-family: 'lucida calligraphy';
+			position: absolute;
+			left:45px;
+			top:165px;
+		}
+
+		.alarm
+		{    
+			margin-left: 5px;
+		    margin-top: 15px;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    padding: 6px;
+		}
+		.alarm  div
+		{
+			margin-top: 6px;
+			display: inline-block;
+		}
+		.alarm .ampm
+		{
+			height:26px;
+			margin-left: 5px;
+		}
+		.alarm  input[type=time]
+		{
+    		width: 80px;
+    		font-size: 11pt
+		}
+		.main
+		{
+			width:200px;
+		}
