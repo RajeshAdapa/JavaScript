@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+	var time,min,sec,flag,n,nums,check;
+	
+		function init() {
+			time = 3;
+			min = time - 1;
+			sec = 59;
+			flag = 0;
+			n = 16;
+			check = 0;
+			puzzle();
+		}
+		function timer() {
+			var s, m;
+			if(sec < 0) {
+				sec = 59;
+				min--;
+			}
+			if(sec < 10)
+				 s = "0" + sec ;
+			else
+				s = sec;
+
+			if(min < 10)
+				m = "0" + min;
+			else
+				m = min;
+
+			sec--;
+			var t = m + ":" + s;
+			document.getElementById("tt").innerHTML=t;
+			
+			if(sec >= 0 || min > 0)
+				setTimeout(timer,1000);
+			else {
+				alert("timeout");
+				document.getElementById("pbox").innerHTML = "";
+				init();
+				document.getElementById("tt").innerHTML = "0" + time + ":00";
+			}
+		}
+
+		function puzzle() {
+
+			var pbox = document.getElementById("pbox");
+
+			for(i=1;i<=n;i++) {
+				var box = document.createElement("div");
+				if(i != n) {
+					box.setAttribute("class","part");
+				}
+				else {
+					box.setAttribute("class","blank");
+				}
+
+				box.setAttribute("id",i);
+				box.setAttribute("onclick","move(this.id)");
+				pbox.appendChild(box);
+			}
+			generateRandomValues();
+			insertNumbers();
+		}
+
+		function insertNumbers() {
+			var pbox = document.getElementById("pbox");
+			for(i=0;i<n-1;i++) {
+				pbox.childNodes[i].innerText = getValue(i);
+			}
+		}
+
+		function move(id) {
+
+			var curr = document.getElementById(id);
+			var prev = curr.previousSibling;
+			var next = curr.nextSibling;
+			
+			if(next !=null && next.id == n) {
+				next.parentNode.insertBefore(next,curr);
+				check = 1;
+			}
+			else if(prev !=null && prev.id == n) {
+				prev.parentNode.insertBefore(curr,prev);
+				check = 1;
+			}
+			else {
+				var i=0;
+				var node=curr;
+				var prev;
+				while(node!=null && i<4) {
+					prev = node.previousSibling;
+					node = prev;
+					i++;
+				}
+				if(prev == null || prev.id != n) {
+					var node = curr;
+					var i=0;
+					var next;
+					while(node!=null && i<4) {
+						next = node.nextSibling;
+						node = next;
+						i++;
+					}
+				}
+				if(node!=null && node.id == n) {
+					nodePrev = node.nextSibling;
+					node.parentNode.insertBefore(node,curr);
+					curr.parentNode.insertBefore(curr,nodePrev);
+					check = 1;
+				}
+			}
+			if(check == 1 && flag == 0) {
+				timer();
+				flag = 1;
+			}
+			checkPuzzle();
+
+		}
+		
+		function generateRandomValues() {
+			nums = [];
+
+			while(nums.length != n-1) {
+				var val = Math.ceil(Math.random() * n-1);
+				if(val > 0 && nums.indexOf(val) == -1){
+					nums.push(val);
+				}
+			}
+
+		}
+
+		function getValue(i) {
+			return nums[i];
+		}
+
+		function checkPuzzle() {
+			var x = document.getElementById("pbox");
+			for(i=0;i<n-1;i++) {
+				if(x.childNodes[i].innerText != i+1)
+					return;
+			}
+			alert("You Win");
+			generateRandomValues();
+			insertNumbers();
+		}
+		
+		
+	</script>
+	<style type="text/css">
+		.pbox {
+			width:180px;
+			height:180px;
+			border:1px solid;
+			padding:5px;
+			padding-bottom: 2px;
+
+		}
+		.part {
+			width:40px;
+			height: 40px;
+			border:1px outset;
+			display:inline-block;
+			margin-left:3px;
+			position:relative;
+			margin-top:2px;
+			text-align:center;
+			line-height:40px;
+			box-shadow: 0px 0px 3px #aa9;
+		}
+		.part:hover {
+			cursor: pointer;
+		}
+		.blank {
+			width:40px;
+			height:40px;
+			display: inline-block;
+			position: relative;
+			color:white;
+			margin-left:4px;
+			margin-top:2px;
+			text-align:center;
+			line-height:40px;
+			vertical-align: top;
+		}
+		.puz {
+			width: 180px;
+			height: 180px;
+			position: absolute;
+			left:44%;
+			top:12%;
+		}
+		.title {
+			font-size:20pt;
+			position: relative;
+			left: 30%;
+    		font-family: 'lucida calligraphy';
+   			top: -10px;
+		}
+		.timer {
+			font-size:15pt;
+		}
+	</style>
+</head>
+<body onload="init()">
+	<div class="puz">
+		<label class="title">Puzzle</label>
+		<div class="timer" id="tt">03:00</div>
+		<div id="pbox" class="pbox"></div>
+	</div>
+</body>
+</html>

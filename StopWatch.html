@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" type="image/jpg" href="stopwatch.jpg"/>
+	<script>
+		var hh,mm,ss,ms;
+		var watch;
+
+		function init() {
+			hh=mm=ss=ms=0;
+		}
+
+		function startWatch() {
+
+			document
+			document.getElementById("seconds").style.animation="rotate 61s infinite linear";
+
+			ms++;
+			if(ms > 9) {
+				ms = 0;
+				ss++;
+			}
+			if(ss > 59) {
+				ss = ms = 0;
+				mm++;
+			}
+			if(mm > 59){
+				mm = ss = ms = 0;
+				hh++;
+			}
+
+			if(hh < 10)
+				h = "0" + hh;
+			else
+				h = hh;
+
+			if(mm < 10)
+				m = "0" + mm;
+			else 
+				m = mm;
+
+			if(ss < 10)
+				s = "0" + ss;
+			else 
+				s = ss;
+
+			document.getElementById("watch").innerHTML = h + ":" + m + ":" + s + ":" + ms;
+			document.getElementById("start").style.display = "none";
+			document.getElementById("pause").style.display = "inline-block";
+			document.getElementById("stop").style.display = "inline-block";
+
+
+			watch = setTimeout(startWatch,100);
+		}
+
+		function stopWatch() {
+			clearTimeout(watch);
+			init();
+			document.getElementById("watch").innerHTML = "00:00:00:0";
+			document.getElementById("start").style.display = "inline-block";
+			document.getElementById("pause").style.display = "none";
+			document.getElementById("continue").style.display = "none";
+			document.getElementById("stop").style.display = "none";
+			document.getElementById('seconds').style.animation="";
+		}
+
+		function pauseWatch(){
+			clearTimeout(watch);
+			document.getElementById("continue").style.display = "inline-block";
+			document.getElementById("pause").style.display = "none";
+			document.getElementById("seconds").style.animationPlayState="paused";
+
+		}
+		function continueWatch() {
+			document.getElementById("continue").style.display = "none";
+			document.getElementById("pause").style.display = "inline-block";
+			startWatch();
+		}
+	</script>
+	<style>
+		.start,.stop,.pause,.continue {
+			width:140px;
+			height:30px;
+			border-radius: 3px;
+			border:0;
+			background-color:orange;
+			color:white;
+			outline:0;
+		}
+		button:active {
+			background-color: white;
+			color:orange;
+		}
+		.stop,.pause,.continue {
+			display: none;
+		}
+		.time {
+			font-size: 24pt;
+		}
+		.timerDiv {
+			width:180px;
+			height:180px;
+			padding:10px;
+			border-radius:200px;
+			border:4px solid #444;
+			background-color:#ecebea;
+			box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
+		.timer {
+			width:180px;
+			height:180px;
+			background:url('clock.svg');
+			background-repeat:no-repeat;
+		}
+		.dot {
+			width:10px;
+			height: 10px;
+			border-radius:10px;
+			background-color:black;
+			border:1px solid;
+			position:absolute;
+			left:97px;
+			top:100px;
+		}
+		.seconds {
+  			height: 88px;
+    		position: absolute;
+    		top: 18px;
+    		left: 102px;
+    		width: 2px;
+    		transform-origin:bottom left;
+    		transform-style: preserve-3d;
+    		background-color:black;
+		}
+		@keyframes rotate {
+ 		100%{
+    		transform: rotateZ(360deg);
+ 		}
+  		
+		}
+		.textTimer{
+			margin-top:50px;
+			margin-left:30px;
+		}
+		.stopwatch {
+			position: absolute;
+			top:100px;
+			left:800px;
+		}
+	</style>
+</head>
+<body onload="init()">
+	<div class="stopwatch">
+		<div class="timerDiv">
+			<div class="timer">
+				<div class="dot"></div>
+				<div class="seconds" id="seconds"></div>
+			</div>
+		</div>
+		<div class="textTimer">
+			<span class="time" id="watch">00:00:00:0</span> </br></br>
+			<button type="button" onclick="startWatch()" class="start" id="start">Start</button>
+			<button type="button" onclick="pauseWatch()" class="pause" id="pause">Pause</button>
+			<button type="button" onclick="continueWatch()" class="continue" id="continue">Resume</button>
+			<button type="button" onclick="stopWatch()" class="stop" id="stop">Stop</button>
+		</div>
+	</div>
+</body>
+</html> 
