@@ -1,0 +1,250 @@
+<html>
+<head>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	
+<script type="text/javascript">
+var dd,mm,yyyy,date;
+dd = mm = yyyy = 0;
+	
+	function init() {
+		var day = new Date();
+		var d = day.getDate();
+		var m = day.getMonth() + 1;
+		var y = day.getFullYear();
+		var currentDate = d + "/" + m + "/" + y;
+		
+		var dateText = document.getElementById("date");
+		if(dateText.value.trim() != "")
+			return;
+
+		dateText.value = currentDate;
+		getDatetext(m);
+	}
+
+	function getDatetext(m)	{
+
+		date = document.getElementById("date").value.split("/");
+		dd  = parseInt(date[0]);
+		mm  = parseInt(date[1]);
+		yyyy= parseInt(date[2]);
+
+		if(dd > 31 || mm > 12 || (dd > 28 && m == 2 && !checkLeap(yyyy)))
+			return;
+
+		var day_num = getDayFromDate(01,mm,yyyy);
+		if(day_num > 0)
+			day_num--;
+		else
+			day_num = 6;
+		showCalendar(dd,mm,yyyy,day_num);
+	}
+
+	function getDayFromDate(day,mon,year) {
+
+		var mon_code = [1,4,4,0,2,5,0,3,6,1,4,6];
+		var year_last_2digits = year % 100;
+		var num_of_leap_years = Math.floor(year_last_2digits / 4);
+		var century = Math.floor((year / 100)) * 100;
+		var century_code = 0;
+		var dayName;
+
+		if(century > 1500)
+		{
+			while(century != 1500)
+			{
+				century -= 100;
+				century_code -= 2;
+
+				if(century_code > 6)
+					century_code = 0;
+				else if(century_code < 0)
+					century_code = 6;
+			}
+		}
+		else if(century < 1500)
+		{
+			while(century != 1500)
+			{
+				century += 100;
+				century_code += 2;
+
+				if(century_code > 6)
+					century_code = 0;
+				else if(century_code < 0)
+					century_code = 6;
+			}
+		}
+
+		var days_count = day + mon_code[mon-1] + year_last_2digits + num_of_leap_years + century_code;
+
+		if(checkLeap(year) && (mon == 1 || mon == 2))
+			days_count--;
+
+		var day_number = days_count % 7;
+
+		switch(day_number)
+		{
+			case 1 : dayName = "sunday"   ; break;
+			case 2 : dayName = "monday"   ; break;
+			case 3 : dayName = "tuesday"  ; break;
+			case 4 : dayName = "wednesday"; break;
+			case 5 : dayName = "thursday" ; break;
+			case 6 : dayName = "friday"   ; break;
+			case 0 : dayName = "saturday" ; break;
+		}
+		//alert(dayName);
+		return day_number;
+	}
+
+	function checkLeap(year) {
+		if((year % 400 == 0 || year % 4 == 0) && year % 100 != 0)
+			return true;
+
+		return false;
+	}
+
+	function showCalendar(d,m,y,start_day) {	
+
+		var days = 1;
+		var day_names = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+		var mon_names = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"];
+		var mon_days  = [31,28,31,30,31,30,31,31,30,31,30,31];
+		var flag = 0;
+		if((y % 400 == 0 || y % 4 == 0) && y % 100 != 0)
+			mon_days[1] = 29;
+
+		var left_button = "<button onclick='prev()' class='btn btn-default'> < </button>";
+		var right_button = "<button onclick='next()' class='btn btn-default'> > </button>";
+
+		var calendar = "<table border = '0' style='width:20%;' class='table table-striped' align='center'>";
+		
+		calendar += "<tr align='center'><th> " + left_button + " </th> ";
+		calendar += " <th colspan = '5'> " + mon_names[m-1] + " " + y + " </th> ";
+		calendar += " <th> " + right_button + " </th></tr> ";
+		calendar += " <tr> ";
+
+		for(var i = 0; i < day_names.length; i++) 
+		{
+			calendar += " <th> " + day_names[i] + " </th> ";
+		}
+		calendar += " </tr> ";
+
+		for(var i = 0; days <= mon_days[m-1]; i++)
+		{
+			calendar += " <tr> ";
+			for(var j = 0; j < day_names.length; j++)
+			{
+				if(j == start_day || flag == 1)
+				{
+				  if(check(days))
+				  	calendar += " <td class='btn btn-info'> " + days + " </td> ";
+				  else
+				    calendar += " <td> " + days + " </td> ";
+  	 			  days++;
+
+  	 			 if(days > mon_days[m-1])
+  	 			 	break;
+  	 			 flag = 1;
+  	 			}
+  	 			else
+  	 			{
+  	 				calendar += " <td></td> ";
+  	 			}
+			}
+			calendar += " </tr> ";
+		}
+		calendar += "</table>";
+
+		document.getElementById("cal").innerHTML = calendar;
+	}
+
+	function check(days)
+	{
+		
+		if(days == date[0] && mm == date[1] && yyyy == date[2])
+			return true;
+		else
+			return false;
+	}
+	function next()
+	{
+		mm = mm + 1;
+		if(mm > 12) 
+		{
+			yyyy = yyyy + 1;
+			mm = 1;
+		}
+
+		var day_num = getDayFromDate(01,mm,yyyy);
+		if(day_num > 0)
+			day_num--;
+		else
+			day_num = 6;
+		showCalendar(dd,mm,yyyy,day_num);
+	}
+
+	function prev()
+	{
+		mm = mm - 1;
+		if(mm < 1) 
+		{
+			yyyy = yyyy - 1;
+			mm = 12;
+		}
+
+		var day_num = getDayFromDate(01,mm,yyyy);
+		if(day_num > 0)
+			day_num--;
+		else
+			day_num = 6;
+		showCalendar(dd,mm,yyyy,day_num);
+	}
+
+</script>
+
+<style type="text/css">
+	table
+	{
+		border-collapse: collapse;
+		font-size:10pt;
+	}
+	tr:first-child
+	{
+		border:none;
+	}
+	tr
+	{
+		text-align : center;
+	}
+	.highlight
+	{
+		background-color: orange;
+		color:white;
+		border:1px solid #0a9dde;
+	}
+	th
+	{
+	text-align:center
+	}
+	input
+	{
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+		border-radius:4px;
+		height: 30px;
+		padding: 6px 12px;
+		border: 1px solid #ccc;
+		margin-right:12px;
+	}
+</style>
+</head>
+<body align="center">
+	<br/><br/>
+	<input type="text" id="date" placeholder="DD/MM/YYYY" onfocus="init()" />
+	<button onclick="getDatetext()" class='btn btn-primary' style="width:120px;height:32px;">Calendar</button> <br/><br/>
+	<div id="cal"></div>
+</body>
+</html>
